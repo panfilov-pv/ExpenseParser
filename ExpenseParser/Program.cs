@@ -62,36 +62,5 @@ namespace ExpenseParser
 
             return builder.Build();
         }
-
-        private static ICollection<IParsedRow> ParseFiles(IConfig config)
-        {
-            List<IParsedRow> totalRows = new();
-
-            string[] sberbankFiles = Directory.GetFiles(config.SberbankFolderPath);
-
-            if (sberbankFiles.Length > 0)
-            {
-                IFileLoader fileParser = new SberbankXlsxFileParser();
-
-                foreach (string sberbankFilePath in sberbankFiles)
-                {
-                    totalRows.AddRange(fileParser.Parse(sberbankFilePath));
-                }
-            }
-
-            string[] tinkoffFiles = Directory.GetFiles(config.TinkoffFolderPath);
-
-            if (tinkoffFiles.Length > 0)
-            {
-                IFileLoader fileParser = new TinkoffXlsxFileParser();
-
-                foreach (string tinkoffFilePath in tinkoffFiles)
-                {
-                    totalRows.AddRange(fileParser.Parse(tinkoffFilePath));
-                }
-            }
-
-            return totalRows;
-        }
     }
 }
