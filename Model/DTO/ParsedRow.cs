@@ -17,13 +17,16 @@ namespace Model.DTO
 
         public string? OperationCardHolder { get; }
 
-        public ParsedRow(DateTime? operationDate, string? category, double operationSum, string? description, string? cardNumber)
+        public OperationStatus OperationStatus { get; }
+
+        public ParsedRow(DateTime? operationDate, string? category, double operationSum, string? description, string? cardNumber, OperationStatus? operationStatus)
         {
             OperationDate = operationDate;
             CategoryName = category;
             OperationSum = operationSum;
             OperationDescription = description;
             OperationCardHolder = cardNumber;
+            OperationStatus = operationStatus ?? OperationStatus.UNKNOWN;
         }
     }
 }

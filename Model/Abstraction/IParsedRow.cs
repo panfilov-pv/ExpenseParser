@@ -13,5 +13,7 @@
         string? OperationCardHolder { get; }
 
         bool IsValid { get; }
+
+        OperationStatus OperationStatus { get; }
     }
 }

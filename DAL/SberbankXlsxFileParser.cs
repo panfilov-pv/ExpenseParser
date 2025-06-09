@@ -84,7 +84,7 @@ namespace DAL
                     }
                 }
 
-                IParsedRow parsedRow = new ParsedRow(date, category, sum, description, cardHolder);
+                IParsedRow parsedRow = new ParsedRow(date, category, sum, description, cardHolder, null);
 
                 if (!parsedRow.IsValid)
                 {

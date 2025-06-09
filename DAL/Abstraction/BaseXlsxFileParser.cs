@@ -1,4 +1,5 @@
-﻿using Model.Abstraction;
+﻿using Model;
+using Model.Abstraction;
 using OfficeOpenXml;
 
 namespace DAL.Abstraction
@@ -9,7 +10,8 @@ namespace DAL.Abstraction
         OperationSum = 1,
         CategoryName = 2,
         OperationDescription = 3,
-        OperationCardHolder = 4
+        OperationCardHolder = 4,
+        OperationStatus = 5
     }
 
     public abstract class BaseXlsxFileParser : IFileLoader
@@ -88,6 +90,30 @@ namespace DAL.Abstraction
             }
 
             throw new InvalidDataException("Не удалось получить сумму операции!");
+        }
+
+        public virtual OperationStatus GetOperationStatus(object fieldValue)
+        {
+            if (fieldValue is string operationDescription)
+            {
+                return operationDescription switch
+                {
+                    "OK" => OperationStatus.OK,
+                    "FAILED" => OperationStatus.FAIL,
+                    _ => throw new Exception("Не удалось распарсить статус операции!"),
+                };
+            }
+            else if (fieldValue is ExcelRange excelRange)
+            {
+                return excelRange.GetValue<string>() switch
+                {
+                    "OK" => OperationStatus.OK,
+                    "FAILED" => OperationStatus.FAIL,
+                    _ => throw new Exception("Не удалось распарсить статус операции!"),
+                };
+            }
+
+            throw new InvalidDataException("Не удалось получить статус операции!");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DAL.Abstraction;
+using Model;
 using Model.Abstraction;
 using Model.DTO;
 using OfficeOpenXml;
@@ -15,6 +16,7 @@ namespace DAL
             { "Сумма операции с округлением" , ColumnType.OperationSum },
             { "Описание" , ColumnType.OperationDescription },
             { "Номер карты" , ColumnType.OperationCardHolder },
+            { "Статус", ColumnType.OperationStatus }
         };
 
         public override Dictionary<int, string> ColumnNamesByNumbers { get; } = new();
@@ -85,6 +87,7 @@ namespace DAL
                 string category = null;
                 string description = null;
                 string cardHolder = null;
+                OperationStatus? operationStatus = null;
 
                 foreach (var columnNameByNumber in ColumnNamesByNumbers)
                 {
@@ -97,11 +100,17 @@ namespace DAL
                         case ColumnType.CategoryName: category = GetCategoryName(excelRange); break;
                         case ColumnType.OperationDescription: description = GetOperationDescription(excelRange); break;
                         case ColumnType.OperationCardHolder: cardHolder = GetOperationCardHolder(excelRange); break;
+                        case ColumnType.OperationStatus: operationStatus = GetOperationStatus(excelRange); break;
                         default: throw new Exception("Ошибка: попался неизвестный тип столбца для парсинга!");
                     }
                 }
 
-                IParsedRow parsedRow = new ParsedRow(date, category, sum, description, cardHolder);
+                IParsedRow parsedRow = new ParsedRow(date, category, sum, description, cardHolder, operationStatus);
+
+                if (parsedRow.OperationStatus == OperationStatus.FAIL)
+                {
+                    continue;
+                }
 
                 if (!parsedRow.IsValid)
                 {
